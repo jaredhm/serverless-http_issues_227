@@ -1,0 +1,39 @@
+#!/bin/bash
+
+echo "[+] Installing terraform version"
+tfenv init
+echo "[+] Using terraform $(tfenv version-name)"
+echo
+
+echo "[+] Building site"
+npm run package
+echo
+
+echo "[+] Running terraform plan"
+pushd "infra/env/prod"
+  terraform init -upgrade
+  terraform validate -no-color
+  terraform plan -no-color
+popd
+echo
+
+echo "[+] Press any key to continue..."
+read -s -n 1
+
+echo "[+] Running terraform apply"
+pushd "infra/env/prod"
+  terraform apply -auto-approve
+
+  echo "[+] Updating static resources"
+  static_bucket=$(terraform output -json static_bucket | jq -r)
+  site_dist_dir=$(terraform output -json site_dist_dir | jq -r)
+  aws s3 sync "${site_dist_dir}/.next/static" "s3://${static_bucket}/_next/static" \
+    --cache-control="public, max-age=31536000, immutable"
+popd
+echo
+
+echo "[+] Done"
+
+
+
+
