@@ -19,7 +19,7 @@ pushd "$SCRIPT_DIR/.."
   # Copy in the static directory. This is only necessary when we're not shipping this to S3.
   #  cp -r "$NEXT_DIR/static" "$STANDALONE_DIR/components/frontend/.next"
   # Copy in the public directory.
-  cp -r public $STANDALONE_DIR/packages/site/public
+  cp -r public $NEXT_DIR/static
   pushd "$STANDALONE_DIR"
     zip -rq "$NEXT_DIR/handler.zip" .
   popd

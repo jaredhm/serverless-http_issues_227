@@ -34,5 +34,11 @@ Finally, if I've done my work reasonably well, you should just be able to run th
 ./deploy
 ```
 
+#### Cleanup
+
+Simply run the following to clean up all resources:
+```
+pushd infra/env/prod && terraform destroy && popd infra/env/prod
+```
 
 

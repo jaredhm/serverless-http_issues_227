@@ -15,7 +15,12 @@ import React from "react";
 
 const MyDocument = () => (
   <Html lang="en">
-    <Head />
+    <Head>
+      <link
+        rel="shortcut icon"
+        href={process.env.NODE_ENV === 'development' ? '/favicon.ico' : '/_next/static/public/favicon.ico'}
+      />
+    </Head>
     <body>
       <Main />
       <NextScript />
