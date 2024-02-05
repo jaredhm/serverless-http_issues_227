@@ -21,14 +21,23 @@ const nextServer = new NextServer({
   conf: config,
 });
 const nextHandler = nextServer.getRequestHandler();
-const shimmedNextHandler = (req, ...rest) => {
+const shimmedNextHandler = (req, res, parsedUrl) => {
   const logger = baseLogger.child({
     url: req.url,
     method: req.method,
     requestContext: req.requestContext,
   });
   logger.debug("handler-lambda::nextHandler");
-  return nextHandler(req, ...rest);
+
+  // monkey patch (not sure if it works) - https://github.com/dougmoscrop/serverless-http/issues/227#issuecomment-1922467440
+  const innerWrite = res.write;
+  const write = (...args) => {
+    innerWrite.call(res, args);
+    return true;
+  };
+  res.write = write;
+
+  return nextHandler(req, res, parsedUrl);
 };
 
 const serverlessHandler = serverlessHttp(shimmedNextHandler, {
