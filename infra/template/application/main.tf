@@ -54,7 +54,7 @@ module "lambda_site" {
   function_name          = "serverless-http_issues_227"
   description            = "serverless-http_issues_227"
   handler                = "handler.handler"
-  runtime                = "nodejs18.x"
+  runtime                = "nodejs20.x"
   local_existing_package = var.site_dist_zip
   timeout                = 30
 
